@@ -1,8 +1,7 @@
 <?php
-
 $xpdo_meta_map = array (
-  'xPDOSimpleObject' => 
-  array (
-    0 => 'Smushit',
-  ),
+    'xPDOSimpleObject' => 
+    array (
+        0 => 'smushit\\Smushit',
+    ),
 );
