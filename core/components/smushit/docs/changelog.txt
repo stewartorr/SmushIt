@@ -1,5 +1,14 @@
 Changelog for SmushIt package.
 
+SmushIt 2.0 - 03/12/2025
+=====================================
+- Super updates for 2022
+- Massive speed improvements and optimisations.
+- Update method for optimising images that work for local servers and those 
+behind password-protected layers.
+- Added new database and CMP to track image compression.
+- Updated compression ratio to help produce better compression on JPEG images.
+
 SmushIt 1.0 - 24/10/2016
 =====================================
 - First version. Feedback and commments welcome.
