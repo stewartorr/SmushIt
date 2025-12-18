@@ -1,7 +1,8 @@
 <?php
-require_once dirname(dirname(__FILE__)) . '/model/smushit/smushit.class.php';
 
-use Smushit;
+require_once MODX_CORE_PATH . 'components/smushit/src/Smushit.php';
+
+use Smushit\Smushit;
 
 class SmushitIndexManagerController extends modExtraManagerController
 {

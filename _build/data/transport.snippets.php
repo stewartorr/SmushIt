@@ -13,14 +13,9 @@ function getSnippetContent($filename = '') {
 }
 
 $snippets = array();
-
-/* course snippets */
 $snippets[1]= $modx->newObject('modSnippet');
-$snippets[1]->fromArray(array(
-    'id' => 1,
-    'name' => 'smushit',
-    'description' => 'This is an output filter that processes images with https://resmush.it/api in an attempt to reduce filesizes. Created by Stewart Orr https://www.stewartorr.co.uk/smushit/',
-    'snippet' => getSnippetContent($sources['snippets'] . 'snippet.smushit.php'),
-    ), '', true, true);
-
+$snippets[1]->set('id', 1);
+$snippets[1]->set('name', 'smushit');
+$snippets[1]->set('description', 'This is an output filter that processes images with https://resmush.it/api in an attempt to reduce filesizes. Created by Stewart Orr https://www.stewartorr.co.uk/smushit/');
+$snippets[1]->set('snippet', getSnippetContent($sources['snippets'] . 'snippet.smushit.php'));
 return $snippets;

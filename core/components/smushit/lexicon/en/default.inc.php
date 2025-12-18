@@ -5,7 +5,7 @@
  */
 
 $_lang['smushit'] = 'SmushIt';
-$_lang['smushit.management_desc'] = 'Images optimised by Smushit extra.';
+$_lang['smushit.management_desc'] = 'View a list of optimised images and their status from the SmushIt extra.';
 $_lang['smushit.management_src'] = 'Source';
 $_lang['smushit.management_dest'] = 'Optimised';
 $_lang['smushit.management_original'] = 'Original size';

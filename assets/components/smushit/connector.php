@@ -3,14 +3,11 @@ require_once dirname(dirname(dirname(dirname(__FILE__)))) . '/config.core.php';
 require_once MODX_CORE_PATH . 'config/' . MODX_CONFIG_KEY . '.inc.php';
 require_once MODX_CONNECTORS_PATH . 'index.php';
 
-$corePath = $modx->getOption('smushit.core_path', null, $modx->getOption('core_path') . 'components/smushit/');
-require_once $corePath . 'model/smushit/smushit.class.php';
-
-$modx->smushit = new Smushit($modx);
+$corePath = $modx->getOption('smushit.core_path', null, MODX_CORE_PATH . 'components/smushit/');
+$modx->addPackage('smushit', $corePath . 'model/');
 $modx->lexicon->load('smushit');
-
-$path = $modx->getOption('processorsPath', $modx->smushit->config, $corePath . 'processors/');
+$processorsPath = $modx->getOption('processorsPath', $modx->smushit->config, $corePath . 'processors/');
 $modx->request->handleRequest(array(
-    'processors_path' => $path,
+    'processors_path' => $processorsPath,
     'location' => '',
 ));

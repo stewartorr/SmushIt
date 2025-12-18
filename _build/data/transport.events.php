@@ -5,11 +5,15 @@
  */
 
 $events = array();
-
-/** create the plugin object */
-$events[0] = $modx->newObject('modEvent');
-$events[0]->set('name', 'ClientConfig_ConfigChange');
-$events[0]->set('service', 6);
-$events[0]->set('groupname', 'clientconfig');
+// $e = array(
+//     'OnSiteRefresh',
+// );
+// foreach ($e as $ev) {
+//     $events[$ev] = $modx->newObject('modPluginEvent');
+//     $events[$ev]->fromArray(array(
+//         'event' => $ev,
+//         'propertyset' => 0
+//     ),'',true,true);
+// }
 
 return $events;

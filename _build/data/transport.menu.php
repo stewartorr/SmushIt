@@ -1,20 +1,10 @@
 <?php
 /**
- * Adds modActions and modMenus into package
+ * Adds modMenu into package
  *
  * @package smushit
  * @subpackage build
  */
-// $action= $modx->newObject('modAction');
-// $action->fromArray(array(
-//     'id' => 1,
-//     'namespace' => 'smushit',
-//     'parent' => 0,
-//     'controller' => 'controllers/index',
-//     'haslayout' => true,
-//     'lang_topics' => 'smushit:default',
-//     'assets' => '',
-// ),'',true,true);
 
 $menu = $modx->newObject('modMenu');
 $menu->fromArray(array(

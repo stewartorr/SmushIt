@@ -21,48 +21,42 @@ Smushit.grid.Smushit = function (config) {
                 dataIndex: "src",
                 sortable: true,
                 width: 250,
-                editor: { xtype: "textfield" },
             },
             {
                 header: _("smushit.management_dest"),
                 dataIndex: "dest",
-                sortable: false,
+                sortable: true,
                 width: 250,
-                editor: { xtype: "textfield" },
             },
             {
                 header: _("smushit.management_original"),
                 dataIndex: "original",
-                sortable: false,
+                sortable: true,
                 width: 100,
-                editor: { xtype: "textfield" },
             },
             {
                 header: _("smushit.management_optimised"),
                 dataIndex: "optimised",
-                sortable: false,
+                sortable: true,
                 width: 100,
-                editor: { xtype: "textfield" },
             },
             {
                 header: _("smushit.management_format"),
                 dataIndex: "format",
-                sortable: false,
+                sortable: true,
                 width: 80,
-                editor: { xtype: "textfield" },
             },
             {
                 header: _("smushit.management_smushdate"),
                 dataIndex: "smushdate",
-                sortable: false,
+                sortable: true,
                 width: 80,
-                editor: { xtype: "textfield" },
             },
         ]
         ,tbar:[{
     xtype: 'textfield'
-    ,id: 'doodles-search-filter'
-    ,emptyText: _('doodles.search...')
+    ,id: 'smushit-search-filter'
+    ,emptyText: _('smushit.search...')
     ,listeners: {
         'change': {fn:this.search,scope:this}
         ,'render': {fn: function(cmp) {
