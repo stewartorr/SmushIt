@@ -2,8 +2,11 @@ Smushit.panel.Home = function (config) {
     config = config || {};
     Ext.apply(config, {
         border: false,
-        baseCls: "modx-formpanel",
-        cls: "container",
+        cls: "container home-panel",
+        defaults: {
+            collapsible: false,
+            autoHeight: true
+        },
         items: [
             {
                 html: "<h2>" + _("smushit") + "</h2>",
