@@ -6,16 +6,17 @@
 
 function getSnippetContent($filename = '') {
     $o = file_get_contents($filename);
-    $o = str_replace('<?php','',$o);
-    $o = str_replace('?>','',$o);
-    $o = trim($o);
-    return $o;
+    $o = str_replace(['<?php', '?>'], '', $o);
+    return trim($o);
 }
 
-$snippets = array();
-$snippets[1]= $modx->newObject('modSnippet');
-$snippets[1]->set('id', 1);
-$snippets[1]->set('name', 'smushit');
-$snippets[1]->set('description', 'This is an output filter that processes images with https://resmush.it/api in an attempt to reduce filesizes. Created by Stewart Orr https://www.stewartorr.co.uk/smushit/');
-$snippets[1]->set('snippet', getSnippetContent($sources['snippets'] . 'snippet.smushit.php'));
+$snippets = [];
+$snippet = $modx->newObject('modSnippet');
+$snippet->fromArray([
+    'name'        => 'smushit',
+    'description' => 'Processes images using https://resmush.it/api to reduce file sizes.',
+    'snippet'     => getSnippetContent($sources['snippets'] . 'snippet.smushit.php'),
+], '', true, true);
+$snippets[] = $snippet;
+
 return $snippets;

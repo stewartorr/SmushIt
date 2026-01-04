@@ -14,31 +14,80 @@ Smushit.grid.Smushit = function (config) {
                 header: _("id"),
                 dataIndex: "id",
                 sortable: true,
-                width: 60,
+                width: 25,
+            },
+            {
+                header: _("smushit.management_preview"),
+                dataIndex: "dest",
+                sortable: true,
+                width: 50,
+                renderer: function(value, metaData, record) {
+                    if (!value) {
+                        return '';
+                    }
+                    metaData.attr = 'ext:qtip="<img src=\'/' + value + '\' style=\'max-width:200px; max-height:200px;\' />"';
+                    return '<img src="/' + value + '" style="height:40px; width: 40px; object-fit: cover;" />';
+                }
             },
             {
                 header: _("smushit.management_src"),
                 dataIndex: "src",
                 sortable: true,
                 width: 250,
+                renderer: function(value, metaData, record) {
+                    return '<a href="/' + value + '" target="_blank">' + value + '</a>';
+                }
             },
             {
                 header: _("smushit.management_dest"),
                 dataIndex: "dest",
                 sortable: true,
                 width: 250,
+                renderer: function(value) {
+                    return '<a href="/' + value + '" target="_blank">' + value + '</a>';
+                }
             },
             {
                 header: _("smushit.management_original"),
                 dataIndex: "original",
                 sortable: true,
-                width: 100,
+                width: 80,
+                renderer: function(value, metaData, record) {
+                    return Ext.util.Format.fileSize(value);
+                }
             },
             {
                 header: _("smushit.management_optimised"),
                 dataIndex: "optimised",
                 sortable: true,
-                width: 100,
+                width: 80,
+                renderer: function(value, metaData, record) {
+                    return Ext.util.Format.fileSize(value);
+                }
+            },
+            {
+                header: _("smushit.management_saving"),
+                dataIndex: "optimised",
+                sortable: true,
+                width: 80,
+                renderer: function(value, metaData, record) {
+                    var a = parseFloat(record.get('original')) || 0;
+                    var b = parseFloat(record.get('optimised')) || 0;
+
+                    if (a === 0) {
+                        return '—';
+                    }
+
+                    var percent = ((b - a) / a) * 100;
+
+                    if (percent < 0) {
+                        metaData.css = 'green';
+                    } else if (percent > 0) {
+                        metaData.css = 'red';
+                    }
+
+                    return Ext.util.Format.number(percent, '0.00') + '%';
+                }
             },
             {
                 header: _("smushit.management_format"),
@@ -50,7 +99,7 @@ Smushit.grid.Smushit = function (config) {
                 header: _("smushit.management_smushdate"),
                 dataIndex: "smushdate",
                 sortable: true,
-                width: 80,
+                width: 120,
             },
         ]
         ,tbar:[{
