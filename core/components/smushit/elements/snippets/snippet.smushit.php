@@ -33,12 +33,17 @@ if (!function_exists('smushitFormatBytes')) {
 	function smushitFormatBytes(int $bytes, int $decimals = 2): string {
 		$size = array('B','kB','MB','GB','TB','PB','EB','ZB','YB');
 		$factor = floor((strlen($bytes) - 1) / 3);
-		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$size[$factor];
+		$unit = $size[$factor] ?? 'B';
+		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . $unit;
 	}
 }
 
 if (!function_exists('smushitOptimisedFilename')) {
-	function smushitOptimisedFilename(string $filename): string {
+	function smushitOptimisedFilename(string $filename, bool $overwrite = false): string {
+
+		// If we are overwriting the file, just return filename
+		if ($overwrite) return $filename;
+
     $info = pathinfo($filename);
 
     // Extract name + extension
@@ -63,17 +68,17 @@ $site_url = $modx->getOption('site_url');
 $quality =  $modx->getOption('smushit.qlty') ?? 80 ;
 $overwrite = false;
 
-
-
-// If the image comes from a resized extra like pthumb or phpthumbof, overwrite the original
-if (str_contains($input, 'image-cache/') || str_contains($input, 'phpthumbof/')) {
+// If the image comes from a resized extra like pthumb or phpthumbof, overwrite the resized version
+if (strpos($input, 'image-cache/') !== false ||
+	strpos($input, 'phpthumbof/') !== false ||
+	strpos($input, 'phpthumbsup/') !== false) {
     $overwrite = true;
 }
 
 // If image file is not blank and the image exists
 if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 
-	if ($smushit = $modx->getObject('Smushit', ['src' => $input])) {
+	if ($smushit = $modx->getObject('modSmushit', ['src' => $input])) {
 		// Check if image is same in case image was replaced
 		if (filesize(MODX_BASE_PATH . $input) == $smushit->original) {
 			return $smushit->dest;
@@ -91,25 +96,27 @@ if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 	// Form name for optimized file
 	$dirs = explode('/', $input);
 	$file = array_pop($dirs);
-	$dest = implode('/', $dirs) . smushitOptimisedFilename($input);
+	$dest = implode('/', $dirs) . '/' . smushitOptimisedFilename($file, $overwrite);
 
-	$mime = mime_content_type(MODX_BASE_PATH . $input);
+	$mime = mime_content_type(MODX_BASE_PATH . $input) ?: 'application/octet-stream';
 	$info = pathinfo($input);
 	$name = $info['basename'];
-	$output = new CURLFile($input, $mime, $name);
+	$output = new CURLFile(MODX_BASE_PATH . $input, $mime, $name);
 	$data = array(
 		"files" => $output,
 	);
 
 	// Start cURL request
 	$ch = curl_init();
-	curl_setopt($ch, CURLOPT_URL, 'http://api.resmush.it/?qlty=' . $quality);
+	curl_setopt($ch, CURLOPT_URL, 'https://api.resmush.it/?qlty=' . $quality);
 	curl_setopt($ch, CURLOPT_POST, 1);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($ch, CURLOPT_USERAGENT, 'MODX Extra SmushIt/2.0.0');
+	curl_setopt($ch, CURLOPT_USERAGENT, 'MODX Extra SmushIt/2.0.0 (https://extras.modx.com/package/smushit)');
 	curl_setopt($ch, CURLOPT_REFERER, $site_url);
+	curl_setopt($ch, CURLOPT_FAILONERROR, true);
+	curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 	$result = curl_exec($ch);
 	if (curl_errno($ch)) {
 		$modx->log(modX::LOG_LEVEL_ERROR, '[smushit] Could not optimise the image (cURL failure: ' . curl_error($ch) . ') ' . MODX_BASE_PATH . $input);
@@ -118,7 +125,12 @@ if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 	curl_close($ch);
 
 	$image = json_decode($result);
-	
+
+	if (!is_object($image)) {
+			$modx->log(modX::LOG_LEVEL_ERROR, '[smushit] Invalid JSON returned by resmush.it');
+			return $input;
+	}
+
 	// If there is an error, report it
 	if (isset($image->error)){
 		$modx->log(modX::LOG_LEVEL_ERROR, '[smushit] Could not optimise image: ' . $site_url . $input);

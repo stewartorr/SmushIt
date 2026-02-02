@@ -18,8 +18,24 @@ class SmushitGetListProcessor extends modObjectGetListProcessor {
     }
 
     public function prepareRow(xPDOObject $object) {
-        return $object->toArray();
+        $row = $object->toArray();
+
+        $actions = [];
+
+        $actions[] = [
+            'cls'    => '',
+            'icon'   => 'icon icon-trash',
+            'title'  => $this->modx->lexicon('delete'),
+            'action' => 'removeItem',
+            'button' => true,
+            'menu'   => true,
+        ];
+
+        $row['actions'] = $actions;
+
+        return $row;
     }
+
 
     public function prepareQueryBeforeCount(xPDOQuery $c) {
         $query = $this->getProperty('query');

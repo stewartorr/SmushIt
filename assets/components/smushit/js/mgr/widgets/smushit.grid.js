@@ -25,8 +25,9 @@ Smushit.grid.Smushit = function (config) {
                     if (!value) {
                         return '';
                     }
-                    metaData.attr = 'ext:qtip="<img src=\'' + MODx.config.base_url + value + '\' style=\'max-width:200px; max-height:200px;\' />"';
-                    return '<img src="' + MODx.config.base_url + value + '" style="height:40px; width: 40px; object-fit: cover;" />';
+                    if (!value.startsWith("/")) value = MODx.config.base_url + value;
+                    metaData.attr = 'ext:qtip="<img src=\'' + value + '\' style=\'max-width:200px; max-height:200px;\' />"';
+                    return '<img src="' + value + '" style="height:40px; width: 40px; object-fit: cover;" />';
                 }
             },
             {
@@ -35,7 +36,8 @@ Smushit.grid.Smushit = function (config) {
                 sortable: true,
                 width: 250,
                 renderer: function(value, metaData, record) {
-                    return '<a href="' + MODx.config.base_url +  value + '" target="_blank">' + value + '</a>';
+                    if (!value.startsWith("/")) value = MODx.config.base_url + value;
+                    return '<a href="' + value + '" target="_blank">' + value + '</a>';
                 }
             },
             {
@@ -43,8 +45,11 @@ Smushit.grid.Smushit = function (config) {
                 dataIndex: "dest",
                 sortable: true,
                 width: 250,
-                renderer: function(value) {
-                    return '<a href="' + MODx.config.base_url + value + '" target="_blank">' + value + '</a>';
+                renderer: function(value, metaData, record) {
+                    if (!value.startsWith("/")) value = MODx.config.base_url + value;
+                    var title = (record.get('src') == record.get('dest')) ? _("smushit.management_overwritten") : _("smushit.management_renamed") ;
+                    var tag = (record.get('src') == record.get('dest')) ? '<span style="font-size: 10px; display: inline-block; padding: 2px 5px; background: #cffbc9; color: #39812f; border-radius:4px; margin: 3px 3px 0 0;" title="' + title + '">Overwritten</span>' : '<span style="font-size: 10px; display: inline-block; padding: 2px 5px; background: #fbf9c9; color: #857d02; border-radius:4px; margin: 3px 3px 0 0;" title="' + title + '">Renamed</span>';
+                    return '<a href="' + value + '" target="_blank">' + value + '</a><br/><span style="font-size: 10px; display: inline-block; padding: 2px 5px; background: #eee; color: #444; border-radius:4px; margin: 3px 3px 0 0;">Optimised</span>' + tag;
                 }
             },
             {
@@ -101,6 +106,7 @@ Smushit.grid.Smushit = function (config) {
                 sortable: true,
                 width: 120,
             },
+
         ]
         ,tbar:[{
     xtype: 'textfield'
@@ -131,5 +137,33 @@ Ext.extend(Smushit.grid.Smushit, MODx.grid.Grid, {
         this.getBottomToolbar().changePage(1);
         this.refresh();
     },
+    getMenu: function () {
+        var m = [];
+
+        m.push({
+            text: _('delete'),
+            handler: this.removeItem,
+            scope: this
+        });
+
+        this.addContextMenuItem(m);
+    },
+    removeItem: function () {
+        MODx.msg.confirm({
+            title: _('delete'),
+            text: _('smushit.management_remove'),
+            url: this.config.url,
+            params: {
+                action: 'mgr/items/remove',
+                id: this.menu.record.id
+            },
+            listeners: {
+                success: {
+                    fn: this.refresh,
+                    scope: this
+                }
+            }
+        });
+    }
 });
 Ext.reg("smushit-grid-smushit", Smushit.grid.Smushit);
