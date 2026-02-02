@@ -1,4 +1,4 @@
-# SmushIt
+# SmushIt v2.0
 SmushIt for MODX tries to optimise and compress PNG and JPEG images for better performance using the resmush.it optimisation API. This will help massively with Google Page Speed and can reduce image sizes by up to 70%. This will overwrite any existing images so is intended to be used as an output filter after pthumb or similar.
 
 ## Snippet smushit

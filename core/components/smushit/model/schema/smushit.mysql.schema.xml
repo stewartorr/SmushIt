@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="smushit" baseClass="xPDOObject" platform="mysql" defaultEngine="InnoDB" version="1.1">
+	<object class="modSmushit" table="smushit" extends="xPDOSimpleObject">
+		<field key="src" dbtype="varchar" precision="255" phptype="string" null="false" />
+		<field key="dest" dbtype="text" phptype="string" null="false" />
+		<field key="original" dbtype="int" phptype="integer" null="true" />
+		<field key="optimised" dbtype="int" phptype="integer" null="true" />
+		<field key="format" dbtype="varchar" precision="10" phptype="string" null="true" />
+		<field key="smushdate" dbtype="timestamp" phptype="timestamp" null="true" default="CURRENT_TIMESTAMP" />
+		<index alias="src" name="src" primary="false" unique="true" type="BTREE">
+    <column key="src" length="255" />
+		</index>
+	</object>
+</model>
