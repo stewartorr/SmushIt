@@ -63,6 +63,18 @@ $builder->package->put(
     ]
 );
 
+$assetsVehicle = $builder->createVehicle(
+    [
+        'source' => $sources['source_assets'],
+        'target' => "return MODX_ASSETS_PATH . 'components/';",
+    ],
+    [
+        xPDOTransport::ABORT_INSTALL_ON_VEHICLE_FAIL => true,
+        'vehicle_class' => 'xPDO\\Transport\\xPDOFileVehicle',
+    ]
+);
+$builder->putVehicle($assetsVehicle);
+
 /*------------------------------------------------------------------------------
     Category
 ------------------------------------------------------------------------------*/

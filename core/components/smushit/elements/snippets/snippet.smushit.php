@@ -113,7 +113,7 @@ if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 	curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-	curl_setopt($ch, CURLOPT_USERAGENT, 'MODX Extra SmushIt/2.0.0 (https://extras.modx.com/package/smushit)');
+	curl_setopt($ch, CURLOPT_USERAGENT, 'MODX Extra SmushIt/2.0.1 (https://extras.modx.com/package/smushit)');
 	curl_setopt($ch, CURLOPT_REFERER, $site_url);
 	curl_setopt($ch, CURLOPT_FAILONERROR, true);
 	curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);

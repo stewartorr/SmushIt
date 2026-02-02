@@ -1,6 +1,10 @@
 Changelog for SmushIt package.
 
-SmushIt 2.0 - 02/01/2026
+SmushIt 2.0.1 - 02/01/2026
+=====================================
+- Fix incorrect build not including CMP assets
+
+SmushIt 2.0.0 - 02/01/2026
 =====================================
 - Super updates for 2025/26
 - Massive speed improvements and optimisations.
