@@ -25,8 +25,8 @@ Smushit.grid.Smushit = function (config) {
                     if (!value) {
                         return '';
                     }
-                    metaData.attr = 'ext:qtip="<img src=\'/' + value + '\' style=\'max-width:200px; max-height:200px;\' />"';
-                    return '<img src="/' + value + '" style="height:40px; width: 40px; object-fit: cover;" />';
+                    metaData.attr = 'ext:qtip="<img src=\'' + MODx.config.base_url + value + '\' style=\'max-width:200px; max-height:200px;\' />"';
+                    return '<img src="' + MODx.config.base_url + value + '" style="height:40px; width: 40px; object-fit: cover;" />';
                 }
             },
             {
@@ -35,7 +35,7 @@ Smushit.grid.Smushit = function (config) {
                 sortable: true,
                 width: 250,
                 renderer: function(value, metaData, record) {
-                    return '<a href="/' + value + '" target="_blank">' + value + '</a>';
+                    return '<a href="' + MODx.config.base_url +  value + '" target="_blank">' + value + '</a>';
                 }
             },
             {
@@ -44,7 +44,7 @@ Smushit.grid.Smushit = function (config) {
                 sortable: true,
                 width: 250,
                 renderer: function(value) {
-                    return '<a href="/' + value + '" target="_blank">' + value + '</a>';
+                    return '<a href="' + MODx.config.base_url + value + '" target="_blank">' + value + '</a>';
                 }
             },
             {

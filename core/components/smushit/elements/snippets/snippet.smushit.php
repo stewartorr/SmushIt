@@ -61,6 +61,14 @@ if (!function_exists('smushitOptimisedFilename')) {
 // Variables
 $site_url = $modx->getOption('site_url');
 $quality =  $modx->getOption('smushit.qlty') ?? 80 ;
+$overwrite = false;
+
+
+
+// If the image comes from a resized extra like pthumb or phpthumbof, overwrite the original
+if (str_contains($input, 'image-cache/') || str_contains($input, 'phpthumbof/')) {
+    $overwrite = true;
+}
 
 // If image file is not blank and the image exists
 if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
@@ -78,7 +86,7 @@ if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 	}
 
 	// Create new smushit image
-	$smushit = $modx->newObject('Smushit');
+	$smushit = $modx->newObject('modSmushit');
 
 	// Form name for optimized file
 	$dirs = explode('/', $input);
@@ -93,7 +101,7 @@ if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 		"files" => $output,
 	);
 
-	// TODO Check if any files are greater than 5Mb limit
+	// Start cURL request
 	$ch = curl_init();
 	curl_setopt($ch, CURLOPT_URL, 'http://api.resmush.it/?qlty=' . $quality);
 	curl_setopt($ch, CURLOPT_POST, 1);
@@ -104,7 +112,7 @@ if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 	curl_setopt($ch, CURLOPT_REFERER, $site_url);
 	$result = curl_exec($ch);
 	if (curl_errno($ch)) {
-		$modx->log(modX::LOG_LEVEL_ERROR, '[smushit] Could not optimise the image (cURL failure): ' . MODX_BASE_PATH . $input);
+		$modx->log(modX::LOG_LEVEL_ERROR, '[smushit] Could not optimise the image (cURL failure: ' . curl_error($ch) . ') ' . MODX_BASE_PATH . $input);
 		return $input;
 	}
 	curl_close($ch);
@@ -118,15 +126,10 @@ if (!empty($input) && file_exists(MODX_BASE_PATH . $input)) {
 	}
 
 	// Save the remote image overwriting the original
-	copy($image->dest, MODX_BASE_PATH . $dest) or die("Could not save remote image.");
-
-	// Create a webp version of the image
-	// $img = imagecreatefrompng(MODX_BASE_PATH . $input);
-	// imagepalettetotruecolor($img);
-	// imagealphablending($img, true);
-	// imagesavealpha($img, true);
-	// imagewebp($img, MODX_BASE_PATH . $dest . '.webp', $quality);
-	// imagedestroy($img);
+	if (!@copy($image->dest, MODX_BASE_PATH . $dest)) {
+		$modx->log(modX::LOG_LEVEL_ERROR, '[smushit] Could not save remote image: ' . $image->dest . ' -> ' . MODX_BASE_PATH . $dest);
+		return $input;
+	}
 
 	// Get image data
 	$original = $image->src_size;
