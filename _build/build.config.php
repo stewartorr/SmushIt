@@ -10,13 +10,14 @@
 define('PKG_NAME','Smushit');
 define('PKG_NAMESPACE', 'smushit');
 define('PKG_NAME_LOWER', strtolower(PKG_NAME));
-define('PKG_VERSION','2.0.0');
+define('PKG_VERSION','2.0.1');
 define('PKG_RELEASE','pl');
 
 $root = dirname(dirname(__FILE__)).'/';
 $sources = array (
     'root' => $root,
     'build' => $root .'_build/',
+    'packages' => $root . '_packages/',
     'events' => $root . '_build/events/',
     'resolvers' => $root . '_build/resolvers/',
     'validators' => $root . '_build/validators/',
