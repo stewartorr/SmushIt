@@ -38,7 +38,7 @@ $output[] = '<h2>SmushIt For MODX</h2>
 <p>Thanks for installing SmushIt! Please review the setup options below before proceeding.</p>';
 $output[] = '<h3>Requirements</h3>
 <ul>
-    <li> - PHP version 7.3+ to 8.0 <u>not yet tested</u></li>
+    <li> - PHP version 7.4+ to 8.0 <u>not yet tested</u></li>
     <li> - PHP version 8.1+ is recommended</li>
 <ul>';
 

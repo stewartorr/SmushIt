@@ -24,10 +24,4 @@
  * @copyright Copyright Stewart Orr 2025
  */
 
-$base_path = MODX_CORE_PATH . 'components/smushit/';
-$modx->addPackage('smushit', $base_path.'model/');
-
-if ($modx->event->name === 'OnSiteRefresh') {
-    $modx->log(modX::LOG_LEVEL_INFO,'[smushit]: Clearing cache of images.');
-    $modx->exec("TRUNCATE TABLE {$modx->getTableName('smushit')}");
-}
+// Placeholder for 'OnSiteRefresh'

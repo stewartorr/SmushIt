@@ -21,7 +21,8 @@ if (!function_exists('checkFields')) {
 	}
 }
 
-$newEvents = array (
+$newEvents = array(
+    array('name' => 'OnSiteRefresh'),
 );
 
 if ($object->xpdo) {
@@ -30,24 +31,21 @@ if ($object->xpdo) {
 		case xPDOTransport::ACTION_INSTALL:
 		case xPDOTransport::ACTION_UPGRADE:
 
-			foreach($newEvents as $k => $fields) {
-
+			foreach($newEvents as $fields) {
 				$event = $modx->getObject('modEvent', array('name' => $fields['name']));
 				if (!$event) {
 					$event = $modx->newObject('modEvent');
-					if ($event) {
-						$event->fromArray($fields, "", true, true);
-						$event->save();
-					}
+					$event->fromArray($fields, '', true, true);
+					$event->save();
 				}
 			}
 
-			$intersects = array (
-				0 =>  array (
-					'pluginid' => 'smushitCacheManager',
+			$intersects = array(
+				array(
+					'pluginid' => 'smushitCacheManager', // plugin name
 					'event' => 'OnSiteRefresh',
-					'priority' => '0',
-					'propertyset' => '0',
+					'priority' => 0,
+					'propertyset' => 0,
 				),
 			);
 
@@ -95,13 +93,15 @@ if ($object->xpdo) {
 			break;
 
 		case xPDOTransport::ACTION_UNINSTALL:
-
-
-			foreach($newEvents as $k => $fields) {
-				$event = $modx->getObject('modEvent', array('name' => $fields['name']));
-				if ($event) {
-					$event->remove();
-				}
+			$plugin = $modx->getObject('modPlugin', ['name' => 'smushitCacheManager']);
+			if ($plugin) {
+					$pluginEvent = $modx->getObject('modPluginEvent', [
+							'pluginid' => $plugin->get('id'),
+							'event' => 'OnSiteRefresh'
+					]);
+					if ($pluginEvent) {
+							$pluginEvent->remove();
+					}
 			}
 			break;
 	}

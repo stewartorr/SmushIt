@@ -83,51 +83,6 @@ if (empty($snippets)) {
 }
 
 /*------------------------------------------------------------------------------
-    Plugins
-------------------------------------------------------------------------------*/
-
-$plugins = include $sources['data'] . 'transport.plugins.php';
-if (is_array($plugins)) {
-    $pluginAttributes = [
-        xPDOTransport::UNIQUE_KEY => 'name',
-        xPDOTransport::PRESERVE_KEYS => false,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::RELATED_OBJECTS => true,
-        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => [
-            'PluginEvents' => [
-                xPDOTransport::PRESERVE_KEYS => true,
-                xPDOTransport::UPDATE_OBJECT => false,
-                xPDOTransport::UNIQUE_KEY => ['pluginid', 'event'],
-            ],
-        ],
-    ];
-
-    foreach ($plugins as $plugin) {
-        $vehicle = $builder->createVehicle($plugin, $pluginAttributes);
-        $builder->putVehicle($vehicle);
-    }
-
-    $modx->log(modX::LOG_LEVEL_INFO, '✅ Packaged ' . count($plugins) . ' plugins.');
-}
-
-/*------------------------------------------------------------------------------
-    Events
-------------------------------------------------------------------------------*/
-
-$events = include $sources['data'] . 'transport.events.php';
-if (is_array($events)) {
-    foreach ($events as $event) {
-        $vehicle = $builder->createVehicle($event, [
-            xPDOTransport::UNIQUE_KEY => 'name',
-            xPDOTransport::PRESERVE_KEYS => true,
-            xPDOTransport::UPDATE_OBJECT => false,
-        ]);
-        $builder->putVehicle($vehicle);
-    }
-    $modx->log(modX::LOG_LEVEL_INFO, '✅ Packaged ' . count($events) . ' events.');
-}
-
-/*------------------------------------------------------------------------------
     Category Vehicle (THIS installs snippets correctly)
 ------------------------------------------------------------------------------*/
 
@@ -157,20 +112,26 @@ $builder->putVehicle($categoryVehicle);
 
 $menu = include $sources['data'] . 'transport.menu.php';
 if (!empty($menu)) {
-    $menuVehicle = $builder->createVehicle($menu, [
-        xPDOTransport::UNIQUE_KEY => 'text',
-        xPDOTransport::PRESERVE_KEYS => true,
-        xPDOTransport::UPDATE_OBJECT => true,
-        xPDOTransport::RELATED_OBJECTS => true,
-        xPDOTransport::RELATED_OBJECT_ATTRIBUTES => [
-            'Action' => [
-                xPDOTransport::UNIQUE_KEY => ['namespace', 'controller'],
-                xPDOTransport::PRESERVE_KEYS => false,
-                xPDOTransport::UPDATE_OBJECT => true,
+    foreach ($menu as $m) {
+        $menuObject = $modx->newObject('modMenu');
+        $menuObject->fromArray($m, '', true, true);
+
+        $menuVehicle = $builder->createVehicle($menuObject, [
+            xPDOTransport::UNIQUE_KEY => 'text',
+            xPDOTransport::PRESERVE_KEYS => true,
+            xPDOTransport::UPDATE_OBJECT => true,
+            xPDOTransport::RELATED_OBJECTS => true,
+            xPDOTransport::RELATED_OBJECT_ATTRIBUTES => [
+                'Action' => [
+                    xPDOTransport::UNIQUE_KEY => ['namespace', 'controller'],
+                    xPDOTransport::PRESERVE_KEYS => false,
+                    xPDOTransport::UPDATE_OBJECT => true,
+                ],
             ],
-        ],
-    ]);
-    $builder->putVehicle($menuVehicle);
+        ]);
+
+        $builder->putVehicle($menuVehicle);
+    }
 }
 
 /*------------------------------------------------------------------------------

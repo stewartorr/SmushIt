@@ -1,6 +1,6 @@
 Changelog for SmushIt package.
 
-SmushIt 2.0 - 03/12/2025
+SmushIt 2.0 - 02/01/2026
 =====================================
 - Super updates for 2025/26
 - Massive speed improvements and optimisations.
